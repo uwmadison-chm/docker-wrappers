@@ -1,0 +1,15 @@
+#!/bin/bash
+
+: <<'DOC'
+Builds the docker image, tagged with the current study name.
+
+Scripts go in the `scripts/infrastructure` directory.
+DOC
+
+
+source "$(dirname "${BASH_SOURCE[0]}")/_setup_env.bash"
+
+pushd "${SCRIPT_DIR}/infrastructure"
+git pull
+docker build -t "${STUDY_NAME}" .
+popd
