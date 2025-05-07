@@ -47,9 +47,10 @@ for study_var in $(compgen -v | grep "^STUDY_"); do
 done
 
 if [[ -t 0 ]] && [[ -t 1 ]]; then
+  echo "This is an interactive session, default to -t and -i"
   # This is an interactive session, default to -t and -i
-  DOCKER_TTY="${DOCKER_TTY:+-t}"
-  DOCKER_INTERACTIVE="${DOCKER_INTERACTIVE:+-i}"
+  DOCKER_TTY="${DOCKER_TTY:--t}"
+  DOCKER_INTERACTIVE="${DOCKER_INTERACTIVE:--i}"
 fi
 
 DOCKER_CMD="docker run ${ENV_FILE_ENTRIES} ${ENV_ENTRIES} -v ${STUDY_DIR}:/s ${DOCKER_INTERACTIVE} ${DOCKER_TTY} ${STUDY_NAME} $@"
