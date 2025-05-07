@@ -6,10 +6,16 @@ Builds the docker image, tagged with the current study name.
 Scripts go in the `scripts/infrastructure` directory.
 DOC
 
-
 source "$(dirname "${BASH_SOURCE[0]}")/_setup_env.bash"
+INFRA_DIR="${SCRIPT_DIR}/infrastructure"
+DOCKER_FILE="${INFRA_DIR}/Dockerfile"
 
-pushd "${SCRIPT_DIR}/infrastructure"
+if [[ ! -f "$DOCKER_FILE" ]]; then
+  echo "${DOCKER_FILE} not found"
+  exit 1
+fi
+
+pushd "${INFRA_DIR}" || exit
 git pull
 docker build -t "${STUDY_NAME}" .
-popd
+popd || exit
