@@ -1,6 +1,6 @@
 # Infrastructure scripts will live in their own repo
 
-/infrastructure/*
+infrastructure
 
 # In case a Mac sees this repo
 .DS_Store
