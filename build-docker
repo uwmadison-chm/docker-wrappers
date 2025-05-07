@@ -4,10 +4,13 @@
 Builds the docker image, tagged with the current study name.
 
 Scripts go in the `scripts/infrastructure` directory.
+
+If DRY_RUN is set to a non-empty value, the docker build command will be echoed
+rather than executed.
 DOC
 
 source "$(dirname "${BASH_SOURCE[0]}")/_setup_env.bash"
-INFRA_DIR="${SCRIPT_DIR}/infrastructure"
+
 DOCKER_FILE="${INFRA_DIR}/Dockerfile"
 
 if [[ ! -f "$DOCKER_FILE" ]]; then
@@ -15,7 +18,12 @@ if [[ ! -f "$DOCKER_FILE" ]]; then
   exit 1
 fi
 
-pushd "${INFRA_DIR}" || exit
 git pull
-docker build -t "${STUDY_NAME}" .
-popd || exit
+
+DOCKER_CMD="docker build -t \"${STUDY_NAME}\" ${INFRA_DIR}"
+
+if [[ -n "${DRY_RUN}" ]]; then
+  echo -e "Would run:\n${DOCKER_CMD}"
+else
+  eval "${DOCKER_CMD}"
+fi

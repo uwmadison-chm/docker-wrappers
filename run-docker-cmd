@@ -46,10 +46,16 @@ for study_var in $(compgen -v | grep "^STUDY_"); do
   ENV_ENTRIES+=" -e ${study_var}"
 done
 
-# Allow this to come from the env
-DOCKER_TTY="${DOCKER_TTY}"
-if [[ -z "${DOCKER_TTY}" ]] && [[ -t 0 ]] && [[ -t 1 ]]; then
-  DOCKER_TTY="-t"
+if [[ -t 0 ]] && [[ -t 1 ]]; then
+  # This is an interactive session, default to -t and -i
+  DOCKER_TTY="${DOCKER_TTY:+-t}"
+  DOCKER_INTERACTIVE="${DOCKER_INTERACTIVE:+-i}"
 fi
 
-echo docker run ${ENV_FILE_ENTRIES} ${ENV_ENTRIES} -v "${STUDY_DIR}":/s -i ${DOCKER_TTY} ${STUDY_NAME} $*
+DOCKER_CMD="docker run ${ENV_FILE_ENTRIES} ${ENV_ENTRIES} -v ${STUDY_DIR}:/s ${DOCKER_INTERACTIVE} ${DOCKER_TTY} ${STUDY_NAME} $@"
+
+if [[ -n "${DRY_RUN}" ]]; then
+  echo -e "Would run:\n${DOCKER_CMD}"
+else
+  eval "${DOCKER_CMD}"
+fi
