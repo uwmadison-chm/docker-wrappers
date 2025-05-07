@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Copyright 2025 Board of Regents of the University of Wisconsin System
+
+: <<'DOC'
+This is the main docker script runner -- run-docker-infra and shell-docker
+both call it.
+
+This is meant to run in a structure like:
+
+study_root/scripts/run-docker-cmd
+
+This does the following:
+
+* Sources setup_env.bash to set STUDY_NAME and STUDY_DIR
+* Starts the docker image tagged ${STUDY_NAME}, with the following:
+  - Exports all environment variables starting with STUDY
+  - All readable-to-you ENV files in STUDY_SECRETS_DIR are passed as --env-file
+    options (STUDY_SECRETS_DIR defaults to STUDY_DIR/config/secrets)
+  - STUDY_DIR is mapped to /s
+  - Starts the commands specified by $* as interactive, with a tty allocated
+    (eg, as much as possible, it's just like running the command in bash)
+DOC
+
+source "$(dirname "${BASH_SOURCE[0]}")/_setup_env.bash"
+
+SECRETS_DIR="${SECRETS_DIR:-${STUDY_DIR}/config/secrets}"
+
+ENV_FILE_ENTRIES=""
+if [[ -d "${SECRETS_DIR}" ]]; then
+  shopt -s nullglob
+  for env_file in "${SECRETS_DIR}"/*.env; do
+    if [[ -r "$env_file" ]]; then
+      ENV_FILE_ENTRIES+=" --env-file \"${env_file}\""
+    else
+      echo "Warning: Cannot read ${env_file}"
+    fi
+  done
+  shopt -u nullglob
+else
+  echo "Warning: ${SECRETS_DIR} does not exist"
+fi
+
+ENV_ENTRIES=""
+for study_var in $(compgen -v | grep "^STUDY_"); do
+  ENV_ENTRIES+=" -e ${study_var}"
+done
+
+# Allow this to come from the env
+DOCKER_TTY="${DOCKER_TTY}"
+if [[ -z "${DOCKER_TTY}" ]] && [[ -t 0 ]] && [[ -t 1 ]]; then
+  DOCKER_TTY="-t"
+fi
+
+echo docker run ${ENV_FILE_ENTRIES} ${ENV_ENTRIES} -v "${STUDY_DIR}":/s -i ${DOCKER_TTY} ${STUDY_NAME} $*

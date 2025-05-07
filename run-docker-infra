@@ -1,0 +1,10 @@
+#!/bin/bash
+
+: <<'DOC'
+Uses docker to run /scripts/infrastructure/run.sh 
+DOC
+
+
+source "$(dirname "${BASH_SOURCE[0]}")/_setup_env.bash"
+
+${SCRIPT_DIR}/run-docker-cmd /s/scripts/infrastructure/run.sh

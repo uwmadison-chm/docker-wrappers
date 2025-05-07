@@ -1,0 +1,10 @@
+#!/bin/bash
+
+: <<'DOC'
+Uses docker to run /bin/bash for a nice shell
+DOC
+
+
+source "$(dirname "${BASH_SOURCE[0]}")/_setup_env.bash"
+
+${SCRIPT_DIR}/run-docker-cmd /bin/bash
