@@ -47,7 +47,6 @@ for study_var in $(compgen -v | grep "^STUDY_"); do
 done
 
 if [[ -t 0 ]] && [[ -t 1 ]]; then
-  echo "This is an interactive session, default to -t and -i"
   # This is an interactive session, default to -t and -i
   DOCKER_TTY="${DOCKER_TTY:--t}"
   DOCKER_INTERACTIVE="${DOCKER_INTERACTIVE:--i}"
