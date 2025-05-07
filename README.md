@@ -43,9 +43,9 @@ The `_setup_env.bash` file sets the following variables:
 
 ### Configuration:
 
+- Set `DRY_RUN` to a non-empty value to not actually run `docker run` or `docker build` commands and print variable values
 - `SECRETS_DIR`: Override the default secrets location (defaults to `${STUDY_DIR}/config/secrets`)
 - `DOCKER_TTY` and `DOCKER_INTERACTIVE`: Override TTY and interactive behavior (see below)
-- Set `DRY_RUN` to a non-empty value to not actually run `docker run` or `docker build` commands
  
 ## Usage Examples
 
