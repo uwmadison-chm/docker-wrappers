@@ -1,9 +1,9 @@
 # This is meant to be sourced from other scripts.
 
-SCRIPT_DIR=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
-STUDY_DIR="$(realpath "${SCRIPT_DIR}"/..)"
-STUDY_NAME="$(basename "${STUDY_DIR}")"
-INFRA_DIR="${SCRIPT_DIR}/infrastructure"
+export SCRIPT_DIR=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
+export STUDY_DIR="$(realpath "${SCRIPT_DIR}"/..)"
+export STUDY_NAME="$(basename "${STUDY_DIR}")"
+export INFRA_DIR="${SCRIPT_DIR}/infrastructure"
 
 if [[ -n "${DRY_RUN}" ]]; then
     echo "DRY_RUN is set!"
