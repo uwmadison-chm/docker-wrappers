@@ -18,12 +18,15 @@ if [[ ! -f "$DOCKER_FILE" ]]; then
   exit 1
 fi
 
-git pull
+PULL_CMD="git -C \"${INFRA_DIR}\" pull"
 
-DOCKER_CMD="docker build -t \"${STUDY_NAME}\" ${INFRA_DIR}"
+DOCKER_CMD="docker build -t \"${STUDY_NAME}\" \"${INFRA_DIR}\""
 
 if [[ -n "${DRY_RUN}" ]]; then
-  echo -e "Would run:\n${DOCKER_CMD}"
+  echo -e "Would run:"
+  echo "${PULL_CMD}"
+  echo "${DOCKER_CMD}"
 else
+  eval "${PULL_CMD}"
   eval "${DOCKER_CMD}"
 fi
